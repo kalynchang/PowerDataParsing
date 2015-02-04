@@ -52,8 +52,8 @@ import json
 json_data = open('gldRunDef.json')
 data = json.load(json_data)
 
-print data['TX_H8345Y_B']['from']
-print data['switch_P5010422-1_15452$P5010422-1_T_-1']['from']
+# print data['TX_H8345Y_B']['from']
+# print data['switch_P5010422-1_15452$P5010422-1_T_-1']['from']
 
 # get transformer names
 # find from nodes for each transformer
@@ -61,7 +61,7 @@ print data['switch_P5010422-1_15452$P5010422-1_T_-1']['from']
 # average the three values of the from nodes
 # put new value into a new dictionary with transformer as the key 
 
-def dict_writer(file, dict1, dict2, dic3):
+def dict_writer(file, dict1, dict2, dict3):
     f = open(file)
     name_list = []
     new_data = {}
@@ -79,10 +79,32 @@ def dict_writer(file, dict1, dict2, dic3):
     
     # now find node name in each dictionary, average the values, and set as 
     # value for corresponding node in new_data
-  
+    for node in name_list:
+        if node in dict1:
+            a = dict1[node]
+        if node in dict2:
+            b = dict2[node]
+        if node in dict3:
+            c = dict3[node]
+        avg = 0
+        div = 0
+        if a != 0.0:
+            avg += a
+            div += 1
+        if b != 0.0:
+            avg += b
+            div += 1
+        if c != 0.0:
+            avg += c
+            div += 1
+        avg = avg / div
+        print avg
+        new_data[node] = avg
         
+    return new_data
         
         
 # D is the final dictionary with node names as keys and the average value
 # of the voltages at each node as the value 
 D = dict_writer('nodesInOrder.csv', A, B, C)
+print D 
